@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MeMoni — Wealth Architect & Future Planner</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Outfit"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            obsidian: {
+              950: '#070308',
+              900: '#0b050d',
+              850: '#140917',
+              800: '#1f0d23',
+              750: '#26102b',
+              700: '#2a1130',
+              600: '#3e1a47',
+            },
+            forest: {
+              950: '#030a04',
+              900: '#071509',
+              800: '#0e2b13',
+              700: '#19461e',
+              600: '#235e1d',
+              500: '#2e7a27',
+              400: '#41a038',
+            },
+            gold: {
+              100: '#fcf8ee',
+              200: '#f5df9a',
+              300: '#eccb74',
+              400: '#e6c568',
+              500: '#d4af37',
+              600: '#b38e3a',
+            },
+            mint: {
+              50: '#f6fcf5',
+              100: '#edf9eb',
+              200: '#d8f3d4',
+              300: '#bfeac8',
+              400: '#a3d99e',
+              500: '#75b570',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0b050d; }
+    ::-webkit-scrollbar-thumb { background: #19461e; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #2a1130; }
+
+    .luxury-card {
+      background: radial-gradient(135% 120% at 0% 0%, rgba(31, 13, 35, 0.88) 0%, rgba(14, 43, 19, 0.75) 100%);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(237, 249, 235, 0.08);
+      box-shadow: 0 14px 40px -10px rgba(0, 0, 0, 0.65), 0 0 25px -4px rgba(35, 94, 29, 0.18);
+    }
+
+    .luxury-card-subtle {
+      background: rgba(15, 7, 18, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(237, 249, 235, 0.06);
+    }
+
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #f5df9a 0%, #e6c568 50%, #fff7dc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  </style>
+</head>
+<body class="bg-obsidian-950 text-mint-100 font-sans antialiased selection:bg-gold-500/30 selection:text-gold-200 min-h-screen flex flex-col justify-between">
+
+  <!-- ================= TOP HEADER & BRAND BAR ================= -->
+  <header class="border-b border-gold-400/15 bg-obsidian-900/95 sticky top-0 z-40 backdrop-blur-md transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between py-3.5 gap-4">
+        
+        <!-- MeMoni Brand Identity -->
+        <div class="flex items-center gap-3.5">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-forest-600 via-forest-800 to-obsidian-800 border border-gold-400/40 flex items-center justify-center shadow-lg shadow-forest-950/70 relative overflow-hidden group">
+            <div class="absolute inset-0 bg-gold-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <!-- Refined Monogram Logo MM -->
+            <span class="font-display font-extrabold tracking-tighter text-lg gold-gradient-text select-none">MM</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-2xl font-display font-bold tracking-tight gold-gradient-text">MeMoni</h1>
+              <span class="text-[10px] tracking-widest font-mono uppercase px-2 py-0.5 rounded-full border border-forest-600/70 bg-forest-900/50 text-mint-300">Continuous 2.0</span>
+            </div>
+            <p class="text-xs text-mint-400/80 font-light tracking-wide">Plan your money, see your future, check in monthly.</p>
+          </div>
+        </div>
+
+        <!-- Master Global Controls -->
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+          
+          <!-- Month & Year Navigator -->
+          <div class="flex items-center bg-obsidian-850 border border-gold-400/25 rounded-xl p-1 shadow-inner">
+            <button onclick="changeMonth(-1)" class="p-1.5 hover:bg-forest-800/60 text-mint-300 hover:text-gold-200 rounded-lg transition" title="Previous Month">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <div class="px-3 text-center min-w-[136px]">
+              <span id="currentMonthDisplay" class="text-xs font-semibold uppercase tracking-wider text-gold-300 font-display">October 2026</span>
+            </div>
+            <button onclick="changeMonth(1)" class="p-1.5 hover:bg-forest-800/60 text-mint-300 hover:text-gold-200 rounded-lg transition" title="Next Month">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </button>
+          </div>
+
+          <!-- Prominent Data Actions -->
+          <button onclick="exportDataJSON()" class="px-3.5 py-1.5 bg-gradient-to-r from-forest-700 to-forest-600 hover:from-forest-600 hover:to-forest-500 border border-gold-400/40 text-mint-50 rounded-xl text-xs font-medium tracking-wide shadow-md shadow-forest-950/40 flex items-center gap-1.5 transition active:scale-95" title="Export all MeMoni records as JSON">
+            <svg class="w-3.5 h-3.5 text-gold-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+            <span>Export Data</span>
+          </button>
+
+          <label class="px-3.5 py-1.5 bg-obsidian-850 hover:bg-obsidian-800 border border-white/10 hover:border-gold-400/40 text-mint-300 hover:text-gold-200 rounded-xl text-xs font-medium tracking-wide cursor-pointer flex items-center gap-1.5 transition">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+            <span>Import</span>
+            <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importDataJSON(event)" />
+          </label>
+
+          <button onclick="resetToDemoData()" class="p-2 text-mint-400 hover:text-rose-400 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/10 transition" title="Reset Demo Data">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+          </button>
+
+          <!-- Auto-save Pill -->
+          <div id="saveStatusIndicator" class="hidden sm:flex items-center gap-1.5 text-[11px] text-mint-300/80 font-mono px-2.5 py-1 rounded-lg bg-forest-950/70 border border-forest-800/50">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Saved to local storage</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- PRIMARY VIEW NAVIGATION TABS -->
+      <nav class="flex border-t border-gold-400/10 -mb-px overflow-x-auto no-scrollbar gap-1 sm:gap-2 pt-1 pb-1">
+        <button onclick="switchTab('budget')" id="tab-budget" class="tab-btn active px-4 py-2.5 text-xs sm:text-sm font-medium tracking-wide rounded-xl transition flex items-center gap-2 border-b-2 border-gold-400 text-gold-300 bg-obsidian-850/70">
+          <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+          <span>Monthly Cash Flow & Zero-Based Budget</span>
+        </button>
+        <button onclick="switchTab('networth')" id="tab-networth" class="tab-btn px-4 py-2.5 text-xs sm:text-sm font-medium tracking-wide rounded-xl transition flex items-center gap-2 border-b-2 border-transparent text-mint-300/70 hover:text-gold-200 hover:border-gold-400/40">
+          <svg class="w-4 h-4 text-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 18h12l3-18H3zm5 6h8" /></svg>
+          <span>Net Worth & Accounts</span>
+        </button>
+        <button onclick="switchTab('annual')" id="tab-annual" class="tab-btn px-4 py-2.5 text-xs sm:text-sm font-medium tracking-wide rounded-xl transition flex items-center gap-2 border-b-2 border-transparent text-mint-300/70 hover:text-gold-200 hover:border-gold-400/40">
+          <svg class="w-4 h-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+          <span>Annual Overview</span>
+        </button>
+        <button onclick="switchTab('projection')" id="tab-projection" class="tab-btn px-4 py-2.5 text-xs sm:text-sm font-medium tracking-wide rounded-xl transition flex items-center gap-2 border-b-2 border-transparent text-mint-300/70 hover:text-gold-200 hover:border-gold-400/40">
+          <svg class="w-4 h-4 text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+          <span>Future Projections & FIRE</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastBox" class="fixed bottom-6 right-6 z-50 transform transition-all duration-300 translate-y-20 opacity-0 pointer-events-none">
+    <div class="px-4 py-3 rounded-xl bg-forest-900 border border-gold-400/40 text-gold-200 shadow-2xl flex items-center gap-2 text-xs font-medium">
+      <svg class="w-4 h-4 text-gold-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+      <span id="toastMessage">Changes saved</span>
+    </div>
+  </div>
+
+  <!-- MAIN APP WORKSPACE -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- ========================================================= -->
+    <!-- VIEW 1: MONTHLY CASH FLOW & ZERO-BASED BUDGET             -->
+    <!-- ========================================================= -->
+    <div id="view-budget" class="space-y-6">
+
+      <!-- ZERO-BASED HERO BANNER -->
+      <div class="luxury-card p-5 sm:p-7 rounded-2xl relative overflow-hidden">
+        <div class="absolute -right-16 -top-16 w-56 h-56 bg-forest-600/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-16 -bottom-16 w-56 h-56 bg-obsidian-700/30 rounded-full blur-3xl pointer-events-none"></div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+          
+          <!-- Inflow Card -->
+          <div>
+            <span class="text-xs uppercase tracking-wider text-mint-400/80 font-medium">Total Monthly Inflow</span>
+            <div class="flex items-baseline gap-2 mt-1">
+              <span id="summaryIncome" class="text-3xl font-display font-bold text-mint-50">$0.00</span>
+              <span class="text-xs text-mint-400">Available</span>
+            </div>
+          </div>
+
+          <!-- Total Assigned Card -->
+          <div>
+            <span class="text-xs uppercase tracking-wider text-mint-400/80 font-medium">Total Assigned</span>
+            <div class="flex items-baseline gap-2 mt-1">
+              <span id="summaryAllocated" class="text-3xl font-display font-bold text-mint-200">$0.00</span>
+              <span class="text-xs text-mint-400">Put to Work</span>
+            </div>
+          </div>
+
+          <!-- Zero-Based Balance Status Widget -->
+          <div id="zeroBasePillCard" class="p-4 rounded-xl border border-white/10 bg-obsidian-950/70 backdrop-blur-md transition-all flex flex-col justify-center">
+            <span class="text-[11px] uppercase tracking-wider text-mint-400/80">Every Dollar Given A Job</span>
+            <div class="flex items-baseline justify-between mt-1">
+              <span id="zeroBalanceAmount" class="text-2xl font-display font-bold text-gold-300">$0.00</span>
+              <span id="zeroBalanceLabel" class="text-xs px-2.5 py-0.5 rounded-full font-medium tracking-wide border border-gold-400/40 bg-gold-500/10 text-gold-300">
+                To Budget
+              </span>
+            </div>
+            <!-- Progress Bar -->
+            <div class="w-full bg-obsidian-900 h-1.5 rounded-full mt-3 overflow-hidden border border-white/5">
+              <div id="allocationProgress" class="h-full bg-gradient-to-r from-forest-600 via-emerald-500 to-gold-400 transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- INFLOW STREAM SECTION -->
+      <div class="luxury-card rounded-2xl p-5 sm:p-6">
+        <div class="flex items-center justify-between border-b border-gold-400/15 pb-4 mb-4">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-forest-800/80 border border-forest-600/40 flex items-center justify-center text-mint-200">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            </div>
+            <div>
+              <h2 class="text-base font-display font-semibold text-mint-50 tracking-wide">Monthly Inflow & Revenue Sources</h2>
+              <p class="text-xs text-mint-400/70">W2 salary, freelance retainers, dividends, rental yields</p>
+            </div>
+          </div>
+          <button onclick="addIncomeItem()" class="px-3 py-1.5 rounded-xl bg-forest-800 hover:bg-forest-700 border border-forest-600/50 text-xs text-mint-100 flex items-center gap-1.5 transition">
+            <svg class="w-3.5 h-3.5 text-gold-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            <span>Add Income Source</span>
+          </button>
+        </div>
+
+        <div id="incomeItemsList" class="space-y-2.5">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- THE 4 ALLOCATION BUCKETS -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- 1. NEEDS BUCKET -->
+        <div class="luxury-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between" id="bucket-card-needs">
+          <div>
+            <div class="flex items-center justify-between border-b border-gold-400/15 pb-3 mb-4">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
+                <h3 class="font-display font-semibold text-base tracking-wide text-mint-100">Essential Needs</h3>
+              </div>
+              <div class="flex items-center gap-2">
+                <span id="bucketTotal-needs" class="text-sm font-mono font-semibold text-mint-200">$0.00</span>
+                <button onclick="addBudgetItem('needs')" class="p-1 rounded-md bg-forest-900 hover:bg-forest-800 text-gold-300 border border-gold-400/20" title="Add Needs Item">
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                </button>
+              </div>
+            </div>
+            <div id="bucketList-needs" class="space-y-2">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+          <div class="pt-4 border-t border-white/5 mt-4 text-[11px] text-mint-400/60 flex justify-between">
+            <span>Standard Target: ~50% of Inflow</span>
+            <span id="bucketPercent-needs">0%</span>
+          </div>
+        </div>
+
+        <!-- 2. WANTS BUCKET -->
+        <div class="luxury-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between" id="bucket-card-wants">
+          <div>
+            <div class="flex items-center justify-between border-b border-gold-400/15 pb-3 mb-4">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-purple-500 shadow-sm shadow-purple-500/50"></span>
+                <h3 class="font-display font-semibold text-base tracking-wide text-mint-100">Lifestyle & Wants</h3>
+              </div>
+              <div class="flex items-center gap-2">
+                <span id="bucketTotal-wants" class="text-sm font-mono font-semibold text-mint-200">$0.00</span>
+                <button onclick="addBudgetItem('wants')" class="p-1 rounded-md bg-forest-900 hover:bg-forest-800 text-gold-300 border border-gold-400/20" title="Add Wants Item">
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                </button>
+              </div>
+            </div>
+            <div id="bucketList-wants" class="space-y-2">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+          <div class="pt-4 border-t border-white/5 mt-4 text-[11px] text-mint-400/60 flex justify-between">
+            <span>Standard Target: ~30% of Inflow</span>
+            <span id="bucketPercent-wants">0%</span>
+          </div>
+        </div>
+
+        <!-- 3. SAVINGS & INVESTMENTS (LINKED TO ASSETS) -->
+        <div class="luxury-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between border-forest-600/40" id="bucket-card-savings">
+          <div>
+            <div class="flex items-center justify-between border-b border-gold-400/15 pb-3 mb-4">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-gold-400 shadow-sm shadow-gold-400/50"></span>
+                <div class="flex items-center gap-2">
+                  <h3 class="font-display font-semibold text-base tracking-wide text-gold-300">Savings & Wealth</h3>
+                  <span class="text-[10px] bg-forest-900/90 text-mint-200 border border-forest-600/40 px-1.5 py-0.5 rounded">Linked to Assets</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span id="bucketTotal-savings" class="text-sm font-mono font-semibold text-gold-300">$0.00</span>
+                <button onclick="addBudgetItem('savings')" class="p-1 rounded-md bg-forest-900 hover:bg-forest-800 text-gold-300 border border-gold-400/20" title="Add Savings Item">
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                </button>
+              </div>
+            </div>
+            <p class="text-[11px] text-mint-400/70 mb-2 italic">Monthly allocations directly build linked Asset account balances.</p>
+            <div id="bucketList-savings" class="space-y-2">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+          <div class="pt-4 border-t border-white/5 mt-4 text-[11px] text-mint-400/60 flex justify-between">
+            <span>Target: 15-20%+ of Inflow</span>
+            <span id="bucketPercent-savings">0%</span>
+          </div>
+        </div>
+
+        <!-- 4. DEBT ELIMINATION (LINKED TO LIABILITIES) -->
+        <div class="luxury-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between border-obsidian-600/50" id="bucket-card-debt">
+          <div>
+            <div class="flex items-center justify-between border-b border-gold-400/15 pb-3 mb-4">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-rose-400 shadow-sm shadow-rose-400/50"></span>
+                <div class="flex items-center gap-2">
+                  <h3 class="font-display font-semibold text-base tracking-wide text-rose-300">Debt Paydown</h3>
+                  <span class="text-[10px] bg-obsidian-800 text-rose-200 border border-rose-900/60 px-1.5 py-0.5 rounded">Linked to Debts</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span id="bucketTotal-debt" class="text-sm font-mono font-semibold text-rose-300">$0.00</span>
+                <button onclick="addBudgetItem('debt')" class="p-1 rounded-md bg-forest-900 hover:bg-forest-800 text-gold-300 border border-gold-400/20" title="Add Debt Item">
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                </button>
+              </div>
+            </div>
+            <p class="text-[11px] text-mint-400/70 mb-2 italic">Allocations decrease linked Liability balances in real-time.</p>
+            <div id="bucketList-debt" class="space-y-2">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+          <div class="pt-4 border-t border-white/5 mt-4 text-[11px] text-mint-400/60 flex justify-between">
+            <span>Extra Debt Reductions</span>
+            <span id="bucketPercent-debt">0%</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- VIEW 2: NET WORTH & ACCOUNTS MANAGER                      -->
+    <!-- ========================================================= -->
+    <div id="view-networth" class="space-y-6 hidden">
+
+      <!-- KPI METRIC CARDS -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        
+        <div class="luxury-card p-5 rounded-2xl border-gold-400/30">
+          <div class="flex justify-between items-start">
+            <span class="text-xs uppercase tracking-wider text-gold-300 font-semibold">Total Net Worth</span>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-gold-400/10 border border-gold-400/30 text-gold-300 font-mono" id="nwMonthDeltaLabel">+0.0%</span>
+          </div>
+          <div class="text-3xl font-display font-bold gold-gradient-text mt-2" id="cardNetWorthTotal">$0.00</div>
+          <p class="text-[11px] text-mint-400/70 mt-1">Total Assets minus Liabilities</p>
+        </div>
+
+        <div class="luxury-card p-5 rounded-2xl border-forest-600/30">
+          <div class="flex justify-between items-start">
+            <span class="text-xs uppercase tracking-wider text-emerald-400 font-semibold">Total Assets</span>
+            <span class="text-xs text-mint-400 font-mono" id="assetCountLabel">0 accounts</span>
+          </div>
+          <div class="text-3xl font-display font-bold text-emerald-300 mt-2" id="cardAssetsTotal">$0.00</div>
+          <p class="text-[11px] text-mint-400/70 mt-1">Cash, Brokerage, Real Estate & Crypto</p>
+        </div>
+
+        <div class="luxury-card p-5 rounded-2xl border-obsidian-600/40">
+          <div class="flex justify-between items-start">
+            <span class="text-xs uppercase tracking-wider text-rose-400 font-semibold">Total Liabilities</span>
+            <span class="text-xs text-mint-400 font-mono" id="liabilityCountLabel">0 debts</span>
+          </div>
+          <div class="text-3xl font-display font-bold text-rose-300 mt-2" id="cardLiabilitiesTotal">$0.00</div>
+          <p class="text-[11px] text-mint-400/70 mt-1">Mortgages, Auto, Student Loans & Cards</p>
+        </div>
+
+        <div class="luxury-card p-5 rounded-2xl border-forest-700/30">
+          <div class="flex justify-between items-start">
+            <span class="text-xs uppercase tracking-wider text-mint-300 font-semibold">Monthly Net Velocity</span>
+            <span class="text-xs px-2 py-0.5 rounded bg-forest-900 border border-forest-700/50 text-mint-300 font-mono">Pulse</span>
+          </div>
+          <div class="text-3xl font-display font-bold text-mint-100 mt-2" id="cardMonthlyVelocity">$0.00</div>
+          <p class="text-[11px] text-mint-400/70 mt-1">Total Savings added + Debt eliminated</p>
+        </div>
+
+      </div>
+
+      <!-- ACCOUNTS SPLIT: ASSETS & LIABILITIES -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- ASSETS REPOSITORY -->
+        <div class="luxury-card rounded-2xl p-5 sm:p-6">
+          <div class="flex items-center justify-between border-b border-gold-400/15 pb-4 mb-4">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-xl bg-forest-900 border border-forest-600/40 flex items-center justify-center text-emerald-400">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
+              </div>
+              <div>
+                <h3 class="text-base font-display font-semibold text-mint-100">Asset Accounts</h3>
+                <p class="text-xs text-mint-400/70">Balances expand automatically with monthly savings</p>
+              </div>
+            </div>
+            <button onclick="addAccount('asset')" class="px-3 py-1.5 rounded-xl bg-forest-800 hover:bg-forest-700 border border-forest-600/50 text-xs text-mint-100 flex items-center gap-1 transition">
+              <svg class="w-3.5 h-3.5 text-gold-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+              <span>Add Asset</span>
+            </button>
+          </div>
+
+          <div id="assetsAccountsList" class="space-y-3">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- LIABILITIES REPOSITORY -->
+        <div class="luxury-card rounded-2xl p-5 sm:p-6">
+          <div class="flex items-center justify-between border-b border-gold-400/15 pb-4 mb-4">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-xl bg-obsidian-850 border border-obsidian-600 flex items-center justify-center text-rose-400">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+              </div>
+              <div>
+                <h3 class="text-base font-display font-semibold text-mint-100">Liability & Debt Accounts</h3>
+                <p class="text-xs text-mint-400/70">Balances contract as debt paydown is executed</p>
+              </div>
+            </div>
+            <button onclick="addAccount('liability')" class="px-3 py-1.5 rounded-xl bg-obsidian-800 hover:bg-obsidian-700 border border-white/10 text-xs text-rose-200 flex items-center gap-1 transition">
+              <svg class="w-3.5 h-3.5 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+              <span>Add Debt</span>
+            </button>
+          </div>
+
+          <div id="liabilitiesAccountsList" class="space-y-3">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- VIEW 3: ANNUAL OVERVIEW & 12-MONTH VISUALIZATION          -->
+    <!-- ========================================================= -->
+    <div id="view-annual" class="space-y-6 hidden">
+      
+      <!-- ANNUAL KPI STATS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="luxury-card p-5 rounded-2xl border border-white/10">
+          <span class="text-[11px] uppercase tracking-wider text-mint-400 font-semibold">Annual Projected Inflow</span>
+          <div class="text-2xl font-display font-bold text-mint-100 mt-1" id="annualInflowMetric">$0.00</div>
+          <span class="text-[11px] text-mint-400/60">Annualized active month rate</span>
+        </div>
+        <div class="luxury-card p-5 rounded-2xl border border-gold-400/30">
+          <span class="text-[11px] uppercase tracking-wider text-gold-300 font-semibold">Annual Capital Stashed</span>
+          <div class="text-2xl font-display font-bold text-gold-300 mt-1" id="annualSavingsMetric">$0.00</div>
+          <span class="text-[11px] text-mint-400/70" id="annualSavingsRateMetric">0% Savings Rate</span>
+        </div>
+        <div class="luxury-card p-5 rounded-2xl border border-obsidian-600/40">
+          <span class="text-[11px] uppercase tracking-wider text-rose-300 font-semibold">Annual Debt Dissolved</span>
+          <div class="text-2xl font-display font-bold text-rose-300 mt-1" id="annualDebtMetric">$0.00</div>
+          <span class="text-[11px] text-mint-400/60">Principal and liabilities reduced</span>
+        </div>
+        <div class="luxury-card p-5 rounded-2xl border border-forest-600/30">
+          <span class="text-[11px] uppercase tracking-wider text-emerald-300 font-semibold">End-of-Year Net Worth</span>
+          <div class="text-2xl font-display font-bold text-emerald-300 mt-1" id="annualEndNetWorthMetric">$0.00</div>
+          <span class="text-[11px] text-mint-400/60">Projected with baseline execution</span>
+        </div>
+      </div>
+
+      <!-- CHARTS -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Stacked Cash Flow Breakdown Chart -->
+        <div class="luxury-card p-5 sm:p-6 rounded-2xl">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-base font-display font-semibold text-mint-50">12-Month Cash Allocation Flow</h3>
+              <p class="text-xs text-mint-400/70">Needs, Wants, Savings, and Debt split over the year</p>
+            </div>
+            <span class="text-xs font-mono text-gold-300 px-2 py-0.5 rounded-lg bg-obsidian-900 border border-gold-400/20">Monthly Breakdown</span>
+          </div>
+          <div class="h-72 w-full">
+            <canvas id="annualFlowChart"></canvas>
+          </div>
+        </div>
+
+        <!-- 12-Month Net Worth Progression Area Chart -->
+        <div class="luxury-card p-5 sm:p-6 rounded-2xl">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-base font-display font-semibold text-mint-50">Annual Net Worth Progression</h3>
+              <p class="text-xs text-mint-400/70">Rolling 12-month trajectory powered by your monthly budget</p>
+            </div>
+            <span class="text-xs font-mono text-emerald-400 px-2 py-0.5 rounded-lg bg-obsidian-900 border border-emerald-500/20">Growth Trajectory</span>
+          </div>
+          <div class="h-72 w-full">
+            <canvas id="annualNetWorthChart"></canvas>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- VIEW 4: FUTURE PROJECTIONS & FIRE SIMULATOR               -->
+    <!-- ========================================================= -->
+    <div id="view-projection" class="space-y-6 hidden">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- INTERACTIVE CONTROLS CARD -->
+        <div class="luxury-card rounded-2xl p-5 sm:p-6 space-y-5">
+          <div class="border-b border-gold-400/15 pb-3">
+            <h3 class="text-base font-display font-semibold text-gold-300">MeMoni FIRE Engine</h3>
+            <p class="text-xs text-mint-400/70">Model compound interest and forecast financial independence</p>
+          </div>
+
+          <!-- Starting Portfolio -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <span class="text-mint-300 font-medium">Starting Net Worth / Capital</span>
+              <span class="font-mono text-gold-300" id="dispProjStart">$0</span>
+            </div>
+            <input type="number" id="projStartInput" oninput="updateProjections()" class="w-full bg-obsidian-900 border border-white/10 rounded-xl px-3 py-2 text-xs font-mono text-mint-100 focus:outline-none focus:border-gold-400" />
+            <button onclick="pullCurrentNetWorthToProj()" class="text-[11px] text-emerald-400 hover:underline">Sync from current Net Worth</button>
+          </div>
+
+          <!-- Monthly Investment -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <span class="text-mint-300 font-medium">Monthly Investment Contribution</span>
+              <span class="font-mono text-emerald-400" id="dispProjMonthly">$0/mo</span>
+            </div>
+            <input type="range" id="projMonthlySlider" min="0" max="20000" step="50" oninput="onMonthlySliderChange()" class="w-full accent-emerald-500 cursor-pointer" />
+            <div class="flex justify-between text-[10px] text-mint-400/60">
+              <span>$0</span>
+              <button onclick="syncMonthlySavingsToProj()" class="text-emerald-400 hover:underline">Sync budget savings</button>
+              <span>$20,000</span>
+            </div>
+          </div>
+
+          <!-- Annual Expected Return Rate -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <span class="text-mint-300 font-medium">Expected Annual Growth Rate (CAGR)</span>
+              <span class="font-mono text-gold-300" id="dispProjRate">8.0%</span>
+            </div>
+            <input type="range" id="projRateSlider" min="1" max="15" step="0.5" value="8.0" oninput="updateProjections()" class="w-full accent-gold-400 cursor-pointer" />
+            <div class="flex justify-between text-[10px] text-mint-400/60">
+              <span>1% (Bonds)</span>
+              <span>8% (Market Average)</span>
+              <span>15% (Max)</span>
+            </div>
+          </div>
+
+          <!-- Horizon Years -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <span class="text-mint-300 font-medium">Projection Horizon</span>
+              <span class="font-mono text-mint-200" id="dispProjYears">25 Years</span>
+            </div>
+            <input type="range" id="projYearsSlider" min="5" max="40" step="1" value="25" oninput="updateProjections()" class="w-full accent-forest-600 cursor-pointer" />
+            <div class="flex justify-between text-[10px] text-mint-400/60">
+              <span>5 Yrs</span>
+              <span>25 Yrs</span>
+              <span>40 Yrs</span>
+            </div>
+          </div>
+
+          <!-- Target FIRE Number -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <span class="text-mint-300 font-medium">Target FIRE / Freedom Goal</span>
+              <span class="font-mono text-purple-300" id="dispProjTargetGoal">$1,500,000</span>
+            </div>
+            <input type="number" id="projTargetGoalInput" value="1500000" step="50000" oninput="updateProjections()" class="w-full bg-obsidian-900 border border-white/10 rounded-xl px-3 py-2 text-xs font-mono text-mint-100 focus:outline-none focus:border-gold-400" />
+            <p class="text-[10px] text-mint-400/60">Rule of 25: 25x your desired annual living expenses</p>
+          </div>
+
+          <!-- Inflation Discount Checkbox -->
+          <div class="pt-3 border-t border-white/10 flex items-center justify-between">
+            <div>
+              <span class="text-xs text-mint-300 font-medium">Inflation Adjusted</span>
+              <p class="text-[10px] text-mint-400/60">Discount nominal dollars by 2.5%/yr</p>
+            </div>
+            <input type="checkbox" id="projInflationToggle" onchange="updateProjections()" class="w-4 h-4 rounded accent-gold-400 cursor-pointer" />
+          </div>
+
+        </div>
+
+        <!-- SIMULATION OUTPUT & MILESTONES -->
+        <div class="lg:col-span-2 luxury-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5">
+          
+          <div>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gold-400/15 pb-4">
+              <div>
+                <span class="text-xs uppercase tracking-wider text-mint-400 font-medium">Projected Portfolio in <span id="summaryHorizonYears">25</span> Years</span>
+                <div class="text-3xl sm:text-4xl font-display font-bold gold-gradient-text mt-1" id="projFinalNetWorth">$0.00</div>
+              </div>
+              <div class="text-left sm:text-right">
+                <span class="text-[11px] text-mint-400 uppercase tracking-wider">Compound Growth Portion</span>
+                <div class="text-xl font-display font-semibold text-emerald-400" id="projInterestEarnedShare">$0.00 (0%)</div>
+              </div>
+            </div>
+
+            <!-- DYNAMIC WEALTH MILESTONES -->
+            <div class="mt-4">
+              <span class="text-xs font-display font-medium text-gold-300 uppercase tracking-wider">Estimated Wealth Milestones</span>
+              <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 mt-2.5" id="milestonesContainer">
+                <!-- Milestone items injected via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- LONG TERM COMPOUND CHART -->
+          <div class="h-64 sm:h-72 w-full pt-2">
+            <canvas id="longTermChart"></canvas>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- LUXURY FOOTER -->
+  <footer class="border-t border-gold-400/10 bg-obsidian-950/90 py-5 text-center text-xs text-mint-400/60">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <div class="w-2 h-2 rounded-full bg-forest-600"></div>
+        <span class="font-display font-bold tracking-wider text-mint-200">MeMoni</span>
+        <span>— Private client-side personal finance architecture.</span>
+      </div>
+      <div>
+        <span>No bank credentials. Zero tracking. 100% locally preserved.</span>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ================= JAVASCRIPT APPLICATION CODE ================= -->
+  <script>
+    const STORAGE_KEY = "memoni_portfolio_state_v1";
+
+    const defaultInitialState = {
+      appName: "MeMoni",
+      currentYear: 2026,
+      currentMonth: 9, // October (0-indexed)
+      accounts: [
+        { id: "acc-1", name: "High-Yield Cash Reserve (Marcus)", type: "asset", category: "Cash", balance: 22500 },
+        { id: "acc-2", name: "Vanguard Total Stock Market (VTSAX)", type: "asset", category: "Brokerage", balance: 84000 },
+        { id: "acc-3", name: "Roth IRA (Fidelity FZROX)", type: "asset", category: "Retirement", balance: 48500 },
+        { id: "acc-4", name: "Primary Residence Equity", type: "asset", category: "Real Estate", balance: 145000 },
+        { id: "acc-5", name: "Federal Student Loan (Principal)", type: "liability", category: "Student Loan", balance: 12400 },
+        { id: "acc-6", name: "Tesla Model Y Vehicle Note", type: "liability", category: "Auto Loan", balance: 18200 },
+        { id: "acc-7", name: "Sapphire Reserve Card", type: "liability", category: "Credit Card", balance: 1200 }
+      ],
+      months: {
+        "2026-09": {
+          income: [
+            { id: "inc-1", name: "Executive Base Salary", amount: 7200 },
+            { id: "inc-2", name: "Strategic Advisory Retainer", amount: 1800 },
+            { id: "inc-3", name: "Quarterly Dividend Distributions", amount: 350 }
+          ],
+          buckets: {
+            needs: [
+              { id: "n-1", name: "Mortgage / Housing Allocation", amount: 2600 },
+              { id: "n-2", name: "Artisanal Groceries & Provisions", amount: 800 },
+              { id: "n-3", name: "High-Speed Fiber, Energy & Water", amount: 320 },
+              { id: "n-4", name: "Health, Dental & Umbrella Insurance", amount: 480 }
+            ],
+            wants: [
+              { id: "w-1", name: "Fine Dining & Social Evenings", amount: 700 },
+              { id: "w-2", name: "Weekend Travel & Hospitality Fund", amount: 500 },
+              { id: "w-3", name: "Athletic Club & Wellness Memberships", amount: 250 },
+              { id: "w-4", name: "Curated Subscriptions & Tech", amount: 100 }
+            ],
+            savings: [
+              { id: "s-1", name: "Roth IRA Monthly Contribution", amount: 583.33, linkedAccountId: "acc-3" },
+              { id: "s-2", name: "Vanguard Taxable Index Accumulation", amount: 1600, linkedAccountId: "acc-2" },
+              { id: "s-3", name: "Liquid Emergency Buffer", amount: 500, linkedAccountId: "acc-1" }
+            ],
+            debt: [
+              { id: "d-1", name: "Federal Student Loan Accelerated Paydown", amount: 650, linkedAccountId: "acc-5" },
+              { id: "d-2", name: "Tesla Vehicle Note Principal", amount: 600, linkedAccountId: "acc-6" },
+              { id: "d-3", name: "Sapphire Monthly Balance Clearance", amount: 266.67, linkedAccountId: "acc-7" }
+            ]
+          }
+        }
+      },
+      projections: {
+        returnRate: 8.0,
+        horizonYears: 25,
+        targetGoal: 1500000,
+        inflationAdjusted: false
+      }
+    };
+
+    let appState = {};
+    let activeTab = "budget";
+
+    // Chart references
+    let annualFlowChartInstance = null;
+    let annualNetWorthChartInstance = null;
+    let longTermChartInstance = null;
+
+    /* ==========================================================
+       INITIALIZATION & STORAGE
+       ========================================================== */
+    function initApp() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          appState = JSON.parse(saved);
+        } catch (e) {
+          console.error("Corrupt state reset", e);
+          appState = JSON.parse(JSON.stringify(defaultInitialState));
+        }
+      } else {
+        appState = JSON.parse(JSON.stringify(defaultInitialState));
+      }
+
+      ensureActiveMonthExists();
+      renderAllViews();
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      flashSaveIndicator();
+    }
+
+    function flashSaveIndicator() {
+      const ind = document.getElementById("saveStatusIndicator");
+      if (ind) {
+        ind.classList.remove("opacity-50");
+        ind.classList.add("text-emerald-300", "border-emerald-500/50");
+        setTimeout(() => {
+          ind.classList.remove("text-emerald-300", "border-emerald-500/50");
+        }, 1200);
+      }
+    }
+
+    function showToast(msg) {
+      const box = document.getElementById("toastBox");
+      const text = document.getElementById("toastMessage");
+      text.innerText = msg;
+      box.classList.remove("translate-y-20", "opacity-0");
+      setTimeout(() => {
+        box.classList.add("translate-y-20", "opacity-0");
+      }, 2500);
+    }
+
+    function getMonthKey(year, month) {
+      return `${year}-${String(month).padStart(2, "0")}`;
+    }
+
+    function getCurrentMonthKey() {
+      return getMonthKey(appState.currentYear, appState.currentMonth);
+    }
+
+    // Option B: Auto-inherit template budget & balances when navigating to an uncreated month
+    function ensureActiveMonthExists() {
+      const key = getCurrentMonthKey();
+      if (!appState.months[key]) {
+        const keys = Object.keys(appState.months).sort();
+        const templateKey = keys.length > 0 ? keys[keys.length - 1] : null;
+
+        if (templateKey && appState.months[templateKey]) {
+          appState.months[key] = JSON.parse(JSON.stringify(appState.months[templateKey]));
+        } else {
+          appState.months[key] = JSON.parse(JSON.stringify(defaultInitialState.months["2026-09"]));
+        }
+        saveState();
+      }
+    }
+
+    /* ==========================================================
+       NAVIGATION & TABS
+       ========================================================== */
+    function switchTab(tabId) {
+      activeTab = tabId;
+      const views = ["budget", "networth", "annual", "projection"];
+
+      views.forEach(v => {
+        const viewEl = document.getElementById(`view-${v}`);
+        const tabEl = document.getElementById(`tab-${v}`);
+        if (v === tabId) {
+          viewEl.classList.remove("hidden");
+          tabEl.classList.add("active", "border-gold-400", "text-gold-300", "bg-obsidian-850/70");
+          tabEl.classList.remove("border-transparent", "text-mint-300/70");
+        } else {
+          viewEl.classList.add("hidden");
+          tabEl.classList.remove("active", "border-gold-400", "text-gold-300", "bg-obsidian-850/70");
+          tabEl.classList.add("border-transparent", "text-mint-300/70");
+        }
+      });
+
+      if (tabId === "annual") {
+        setTimeout(renderAnnualCharts, 50);
+      } else if (tabId === "projection") {
+        setTimeout(renderProjectionView, 50);
+      }
+    }
+
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    function changeMonth(delta) {
+      appState.currentMonth += delta;
+      if (appState.currentMonth > 11) {
+        appState.currentMonth = 0;
+        appState.currentYear += 1;
+      } else if (appState.currentMonth < 0) {
+        appState.currentMonth = 11;
+        appState.currentYear -= 1;
+      }
+      ensureActiveMonthExists();
+      saveState();
+      renderAllViews();
+      showToast(`${monthNames[appState.currentMonth]} ${appState.currentYear} loaded`);
+    }
+
+    /* ==========================================================
+       VIEW 1: ZERO-BASED BUDGET ENGINE
+       ========================================================== */
+    function renderBudgetView() {
+      const key = getCurrentMonthKey();
+      const monthData = appState.months[key];
+
+      document.getElementById("currentMonthDisplay").innerText = `${monthNames[appState.currentMonth]} ${appState.currentYear}`;
+
+      // Inflow items
+      const incomeListEl = document.getElementById("incomeItemsList");
+      incomeListEl.innerHTML = "";
+      let totalIncome = 0;
+
+      monthData.income.forEach((item) => {
+        totalIncome += Number(item.amount) || 0;
+        const row = document.createElement("div");
+        row.className = "flex items-center justify-between gap-3 p-2.5 rounded-xl bg-obsidian-900/70 border border-white/5 hover:border-gold-400/30 transition";
+        row.innerHTML = `
+          <div class="flex-1 flex items-center gap-2">
+            <input type="text" value="${escapeHtml(item.name)}" onchange="updateIncomeItem('${item.id}', 'name', this.value)" class="bg-transparent text-xs sm:text-sm font-medium text-mint-100 focus:outline-none focus:border-b border-gold-400 w-full" placeholder="Income label" />
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-gold-400 font-mono font-medium">$</span>
+            <input type="number" step="0.01" value="${item.amount}" onchange="updateIncomeItem('${item.id}', 'amount', this.value)" class="bg-obsidian-950 border border-white/10 rounded-xl px-2.5 py-1 text-xs font-mono text-mint-100 focus:outline-none focus:border-gold-400 w-28 text-right" />
+            <button onclick="removeIncomeItem('${item.id}')" class="text-mint-400/40 hover:text-rose-400 p-1.5 transition" title="Remove stream">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+            </button>
+          </div>
+        `;
+        incomeListEl.appendChild(row);
+      });
+
+      // 4 Core Categorized Buckets
+      const buckets = ["needs", "wants", "savings", "debt"];
+      let totalAllocated = 0;
+      const bucketTotals = { needs: 0, wants: 0, savings: 0, debt: 0 };
+
+      buckets.forEach(bKey => {
+        const listEl = document.getElementById(`bucketList-${bKey}`);
+        listEl.innerHTML = "";
+        const items = monthData.buckets[bKey] || [];
+
+        items.forEach(item => {
+          const amt = Number(item.amount) || 0;
+          bucketTotals[bKey] += amt;
+          totalAllocated += amt;
+
+          const row = document.createElement("div");
+          row.className = "flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2 rounded-xl bg-obsidian-900/50 border border-white/5 hover:border-white/15 transition";
+
+          // Account selector for linked flow
+          let linkSelectHtml = "";
+          if (bKey === "savings" || bKey === "debt") {
+            const targetType = bKey === "savings" ? "asset" : "liability";
+            const candidateAccounts = appState.accounts.filter(a => a.type === targetType);
+            
+            linkSelectHtml = `
+              <div class="flex items-center gap-1.5 text-[11px] text-mint-400">
+                <span class="text-[10px] text-gold-400">↳</span>
+                <select onchange="updateBudgetItemLink('${bKey}', '${item.id}', this.value)" class="bg-obsidian-950 border border-white/10 rounded-lg px-2 py-0.5 text-[11px] text-mint-200 focus:outline-none focus:border-gold-400/50">
+                  <option value="">-- No Account Linked --</option>
+                  ${candidateAccounts.map(acc => `<option value="${acc.id}" ${item.linkedAccountId === acc.id ? "selected" : ""}>Link to ${escapeHtml(acc.name)}</option>`).join("")}
+                </select>
+              </div>
+            `;
+          }
+
+          row.innerHTML = `
+            <div class="flex-1 space-y-1">
+              <input type="text" value="${escapeHtml(item.name)}" onchange="updateBudgetItem('${bKey}', '${item.id}', 'name', this.value)" class="bg-transparent text-xs text-mint-100 font-medium focus:outline-none focus:border-b border-gold-400 w-full" placeholder="Line item label" />
+              ${linkSelectHtml}
+            </div>
+            <div class="flex items-center gap-2 self-end sm:self-center">
+              <span class="text-xs text-gold-400 font-mono">$</span>
+              <input type="number" step="0.01" value="${item.amount}" onchange="updateBudgetItem('${bKey}', '${item.id}', 'amount', this.value)" class="bg-obsidian-950 border border-white/10 rounded-xl px-2 py-1 text-xs font-mono text-mint-100 focus:outline-none focus:border-gold-400 w-24 text-right" />
+              <button onclick="removeBudgetItem('${bKey}', '${item.id}')" class="text-mint-400/40 hover:text-rose-400 p-1 transition" title="Delete line">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+              </button>
+            </div>
+          `;
+          listEl.appendChild(row);
+        });
+
+        document.getElementById(`bucketTotal-${bKey}`).innerText = formatCurrency(bucketTotals[bKey]);
+        const pct = totalIncome > 0 ? ((bucketTotals[bKey] / totalIncome) * 100).toFixed(1) : 0;
+        document.getElementById(`bucketPercent-${bKey}`).innerText = `${pct}% of Inflow`;
+      });
+
+      // Update Summary & Zero-Based Card
+      document.getElementById("summaryIncome").innerText = formatCurrency(totalIncome);
+      document.getElementById("summaryAllocated").innerText = formatCurrency(totalAllocated);
+
+      const remaining = totalIncome - totalAllocated;
+      const zeroBalanceEl = document.getElementById("zeroBalanceAmount");
+      const zeroLabelEl = document.getElementById("zeroBalanceLabel");
+      const zeroCardEl = document.getElementById("zeroBasePillCard");
+      const progressBar = document.getElementById("allocationProgress");
+
+      zeroBalanceEl.innerText = formatCurrency(Math.abs(remaining));
+      const pctAllocated = totalIncome > 0 ? Math.min((totalAllocated / totalIncome) * 100, 100) : 0;
+      progressBar.style.width = `${pctAllocated}%`;
+
+      if (Math.abs(remaining) < 0.01) {
+        zeroBalanceEl.innerText = "$0.00";
+        zeroLabelEl.innerText = "All Dollars at Work!";
+        zeroLabelEl.className = "text-xs px-2.5 py-0.5 rounded-full font-medium tracking-wide border border-emerald-500/60 bg-emerald-500/20 text-emerald-300";
+        zeroCardEl.className = "p-4 rounded-xl border border-emerald-500/40 bg-forest-950/80 backdrop-blur-md transition-all flex flex-col justify-center";
+      } else if (remaining > 0) {
+        zeroLabelEl.innerText = "Left to Budget";
+        zeroLabelEl.className = "text-xs px-2.5 py-0.5 rounded-full font-medium tracking-wide border border-gold-400/40 bg-gold-500/10 text-gold-300";
+        zeroCardEl.className = "p-4 rounded-xl border border-gold-400/40 bg-obsidian-950/80 backdrop-blur-md transition-all flex flex-col justify-center";
+      } else {
+        zeroLabelEl.innerText = "Overallocated!";
+        zeroLabelEl.className = "text-xs px-2.5 py-0.5 rounded-full font-medium tracking-wide border border-rose-500/60 bg-rose-500/20 text-rose-300";
+        zeroCardEl.className = "p-4 rounded-xl border border-rose-500/40 bg-obsidian-950/80 backdrop-blur-md transition-all flex flex-col justify-center";
+      }
+    }
+
+    function addIncomeItem() {
+      const key = getCurrentMonthKey();
+      appState.months[key].income.push({
+        id: "inc-" + Date.now(),
+        name: "New Revenue Stream",
+        amount: 500
+      });
+      saveState();
+      renderAllViews();
+    }
+
+    function updateIncomeItem(id, field, value) {
+      const key = getCurrentMonthKey();
+      const item = appState.months[key].income.find(i => i.id === id);
+      if (item) {
+        item[field] = field === "amount" ? Math.max(0, parseFloat(value) || 0) : value;
+        saveState();
+        renderAllViews();
+      }
+    }
+
+    function removeIncomeItem(id) {
+      const key = getCurrentMonthKey();
+      appState.months[key].income = appState.months[key].income.filter(i => i.id !== id);
+      saveState();
+      renderAllViews();
+    }
+
+    function addBudgetItem(bucketKey) {
+      const key = getCurrentMonthKey();
+      appState.months[key].buckets[bucketKey].push({
+        id: "b-" + Date.now(),
+        name: "Custom Allocation",
+        amount: 100,
+        linkedAccountId: ""
+      });
+      saveState();
+      renderAllViews();
+    }
+
+    function updateBudgetItem(bucketKey, id, field, value) {
+      const key = getCurrentMonthKey();
+      const item = appState.months[key].buckets[bucketKey].find(i => i.id === id);
+      if (item) {
+        item[field] = field === "amount" ? Math.max(0, parseFloat(value) || 0) : value;
+        saveState();
+        renderAllViews();
+      }
+    }
+
+    function updateBudgetItemLink(bucketKey, id, accountId) {
+      const key = getCurrentMonthKey();
+      const item = appState.months[key].buckets[bucketKey].find(i => i.id === id);
+      if (item) {
+        item.linkedAccountId = accountId;
+        saveState();
+        renderAllViews();
+        showToast("Allocation mapped to account");
+      }
+    }
+
+    function removeBudgetItem(bucketKey, id) {
+      const key = getCurrentMonthKey();
+      appState.months[key].buckets[bucketKey] = appState.months[key].buckets[bucketKey].filter(i => i.id !== id);
+      saveState();
+      renderAllViews();
+    }
+
+
+    /* ==========================================================
+       VIEW 2: NET WORTH & ACCOUNTS MANAGER
+       ========================================================== */
+    function computeAccountEffectiveBalances() {
+      const key = getCurrentMonthKey();
+      const monthData = appState.months[key] || { buckets: { savings: [], debt: [] } };
+      const flowAdditions = {};
+
+      (monthData.buckets.savings || []).forEach(item => {
+        if (item.linkedAccountId) {
+          flowAdditions[item.linkedAccountId] = (flowAdditions[item.linkedAccountId] || 0) + (Number(item.amount) || 0);
+        }
+      });
+
+      (monthData.buckets.debt || []).forEach(item => {
+        if (item.linkedAccountId) {
+          flowAdditions[item.linkedAccountId] = (flowAdditions[item.linkedAccountId] || 0) + (Number(item.amount) || 0);
+        }
+      });
+
+      return flowAdditions;
+    }
+
+    function renderNetWorthView() {
+      const flowImpact = computeAccountEffectiveBalances();
+      const assetListEl = document.getElementById("assetsAccountsList");
+      const debtListEl = document.getElementById("liabilitiesAccountsList");
+      assetListEl.innerHTML = "";
+      debtListEl.innerHTML = "";
+
+      let totalAssets = 0;
+      let totalLiabilities = 0;
+      let assetCount = 0;
+      let liabilityCount = 0;
+
+      appState.accounts.forEach(acc => {
+        const base = Number(acc.balance) || 0;
+        const linkedMonthly = flowImpact[acc.id] || 0;
+        let effectiveBalance = base;
+        let flowBadge = "";
+
+        if (acc.type === "asset") {
+          effectiveBalance = base + linkedMonthly;
+          totalAssets += effectiveBalance;
+          assetCount++;
+          if (linkedMonthly > 0) {
+            flowBadge = `<span class="text-[10px] text-emerald-400 font-mono bg-emerald-950/70 border border-emerald-700/50 px-2 py-0.5 rounded-md">+${formatCurrency(linkedMonthly)}/mo allocated</span>`;
+          }
+        } else {
+          effectiveBalance = Math.max(0, base - linkedMonthly);
+          totalLiabilities += effectiveBalance;
+          liabilityCount++;
+          if (linkedMonthly > 0) {
+            flowBadge = `<span class="text-[10px] text-rose-400 font-mono bg-rose-950/70 border border-rose-800/50 px-2 py-0.5 rounded-md">-${formatCurrency(linkedMonthly)}/mo paid down</span>`;
+          }
+        }
+
+        const card = document.createElement("div");
+        card.className = "p-3.5 rounded-xl bg-obsidian-900/60 border border-white/5 hover:border-gold-400/30 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3";
+        card.innerHTML = `
+          <div class="flex-1 space-y-1">
+            <div class="flex items-center gap-2">
+              <input type="text" value="${escapeHtml(acc.name)}" onchange="updateAccount('${acc.id}', 'name', this.value)" class="bg-transparent text-xs sm:text-sm font-medium text-mint-100 focus:outline-none focus:border-b border-gold-400 w-full" />
+              ${flowBadge}
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] uppercase tracking-wider text-mint-400/60 bg-white/5 px-2 py-0.5 rounded font-mono">${escapeHtml(acc.category || "General")}</span>
+              <span class="text-[10px] text-mint-400/60 font-mono">Base: ${formatCurrency(base)}</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 self-end sm:self-center">
+            <span class="text-xs text-gold-400 font-mono">$</span>
+            <input type="number" step="0.01" value="${acc.balance}" onchange="updateAccount('${acc.id}', 'balance', this.value)" title="Base account balance" class="bg-obsidian-950 border border-white/10 rounded-xl px-2.5 py-1 text-xs font-mono text-mint-100 focus:outline-none focus:border-gold-400 w-28 text-right" />
+            <button onclick="removeAccount('${acc.id}')" class="text-mint-400/40 hover:text-rose-400 p-1.5 transition" title="Delete account">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+            </button>
+          </div>
+        `;
+
+        if (acc.type === "asset") {
+          assetListEl.appendChild(card);
+        } else {
+          debtListEl.appendChild(card);
+        }
+      });
+
+      const netWorthTotal = totalAssets - totalLiabilities;
+      const totalMonthlySavings = Object.values(flowImpact).reduce((a, b) => a + b, 0);
+
+      document.getElementById("cardAssetsTotal").innerText = formatCurrency(totalAssets);
+      document.getElementById("cardLiabilitiesTotal").innerText = formatCurrency(totalLiabilities);
+      document.getElementById("cardNetWorthTotal").innerText = formatCurrency(netWorthTotal);
+      document.getElementById("cardMonthlyVelocity").innerText = formatCurrency(totalMonthlySavings);
+
+      document.getElementById("assetCountLabel").innerText = `${assetCount} accounts`;
+      document.getElementById("liabilityCountLabel").innerText = `${liabilityCount} debts`;
+
+      const deltaPercent = netWorthTotal > 0 ? ((totalMonthlySavings / netWorthTotal) * 100).toFixed(1) : 0;
+      document.getElementById("nwMonthDeltaLabel").innerText = `+${deltaPercent}% MoM`;
+    }
+
+    function addAccount(type) {
+      const isAsset = type === "asset";
+      const newAcc = {
+        id: "acc-" + Date.now(),
+        name: isAsset ? "New Asset Account" : "New Debt Facility",
+        type: type,
+        category: isAsset ? "Brokerage" : "Loan",
+        balance: isAsset ? 5000 : 2500
+      };
+      appState.accounts.push(newAcc);
+      saveState();
+      renderAllViews();
+    }
+
+    function updateAccount(id, field, value) {
+      const acc = appState.accounts.find(a => a.id === id);
+      if (acc) {
+        acc[field] = field === "balance" ? Math.max(0, parseFloat(value) || 0) : value;
+        saveState();
+        renderAllViews();
+      }
+    }
+
+    function removeAccount(id) {
+      appState.accounts = appState.accounts.filter(a => a.id !== id);
+      const key = getCurrentMonthKey();
+      if (appState.months[key]) {
+        ["savings", "debt"].forEach(b => {
+          appState.months[key].buckets[b].forEach(item => {
+            if (item.linkedAccountId === id) item.linkedAccountId = "";
+          });
+        });
+      }
+      saveState();
+      renderAllViews();
+    }
+
+
+    /* ==========================================================
+       VIEW 3: ANNUAL OVERVIEW & CHARTS
+       ========================================================== */
+    function renderAnnualCharts() {
+      const key = getCurrentMonthKey();
+      const monthData = appState.months[key] || { income: [], buckets: { needs: [], wants: [], savings: [], debt: [] } };
+
+      const totalMonthlyIncome = monthData.income.reduce((s, i) => s + (Number(i.amount) || 0), 0);
+      const totalNeeds = (monthData.buckets.needs || []).reduce((s, i) => s + (Number(i.amount) || 0), 0);
+      const totalWants = (monthData.buckets.wants || []).reduce((s, i) => s + (Number(i.amount) || 0), 0);
+      const totalSavings = (monthData.buckets.savings || []).reduce((s, i) => s + (Number(i.amount) || 0), 0);
+      const totalDebt = (monthData.buckets.debt || []).reduce((s, i) => s + (Number(i.amount) || 0), 0);
+
+      const annualInflow = totalMonthlyIncome * 12;
+      const annualSavings = totalSavings * 12;
+      const annualDebt = totalDebt * 12;
+      const annualSavingsRate = totalMonthlyIncome > 0 ? ((totalSavings / totalMonthlyIncome) * 100).toFixed(1) : 0;
+
+      let startingAssets = 0;
+      let startingLiabilities = 0;
+      appState.accounts.forEach(a => {
+        if (a.type === "asset") startingAssets += (Number(a.balance) || 0);
+        else startingLiabilities += (Number(a.balance) || 0);
+      });
+      const startingNetWorth = startingAssets - startingLiabilities;
+      const projectedEndNW = startingNetWorth + (annualSavings + annualDebt);
+
+      document.getElementById("annualInflowMetric").innerText = formatCurrency(annualInflow);
+      document.getElementById("annualSavingsMetric").innerText = formatCurrency(annualSavings);
+      document.getElementById("annualSavingsRateMetric").innerText = `${annualSavingsRate}% Savings Rate`;
+      document.getElementById("annualDebtMetric").innerText = formatCurrency(annualDebt);
+      document.getElementById("annualEndNetWorthMetric").innerText = formatCurrency(projectedEndNW);
+
+      // Stacked Bar Chart
+      const ctxFlow = document.getElementById("annualFlowChart").getContext("2d");
+      if (annualFlowChartInstance) annualFlowChartInstance.destroy();
+
+      const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+      annualFlowChartInstance = new Chart(ctxFlow, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [
+            { label: "Needs", data: Array(12).fill(totalNeeds), backgroundColor: "#235e1d", stack: "Flow" },
+            { label: "Wants", data: Array(12).fill(totalWants), backgroundColor: "#3e1a47", stack: "Flow" },
+            { label: "Savings & Investments", data: Array(12).fill(totalSavings), backgroundColor: "#e6c568", stack: "Flow" },
+            { label: "Debt Elimination", data: Array(12).fill(totalDebt), backgroundColor: "#e11d48", stack: "Flow" }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "top", labels: { color: "#edf9eb", font: { size: 10, family: "Plus Jakarta Sans" } } },
+            tooltip: { callbacks: { label: (c) => ` ${c.dataset.label}: ${formatCurrency(c.raw)}` } }
+          },
+          scales: {
+            x: { stacked: true, grid: { color: "rgba(255,255,255,0.05)" }, ticks: { color: "#bfeac8" } },
+            y: {
+              stacked: true,
+              grid: { color: "rgba(255,255,255,0.05)" },
+              ticks: { color: "#bfeac8", callback: (val) => "$" + (val >= 1000 ? (val/1000) + "k" : val) }
+            }
+          }
+        }
+      });
+
+      // Annual Net Worth Progression Area Chart
+      const ctxNW = document.getElementById("annualNetWorthChart").getContext("2d");
+      if (annualNetWorthChartInstance) annualNetWorthChartInstance.destroy();
+
+      const monthlyBuild = totalSavings + totalDebt;
+      const rollingNWData = [];
+      for (let m = 0; m < 12; m++) {
+        rollingNWData.push(startingNetWorth + (monthlyBuild * (m + 1)));
+      }
+
+      const gradient = ctxNW.createLinearGradient(0, 0, 0, 250);
+      gradient.addColorStop(0, "rgba(35, 94, 29, 0.65)");
+      gradient.addColorStop(1, "rgba(35, 94, 29, 0.0)");
+
+      annualNetWorthChartInstance = new Chart(ctxNW, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Net Worth",
+            data: rollingNWData,
+            borderColor: "#41a038",
+            backgroundColor: gradient,
+            borderWidth: 2.5,
+            fill: true,
+            tension: 0.35,
+            pointBackgroundColor: "#e6c568",
+            pointRadius: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: (c) => ` Net Worth: ${formatCurrency(c.raw)}` } }
+          },
+          scales: {
+            x: { grid: { color: "rgba(255,255,255,0.05)" }, ticks: { color: "#bfeac8" } },
+            y: {
+              grid: { color: "rgba(255,255,255,0.05)" },
+              ticks: { color: "#bfeac8", callback: (val) => "$" + (val >= 1000 ? (val/1000) + "k" : val) }
+            }
+          }
+        }
+      });
+    }
+
+
+    /* ==========================================================
+       VIEW 4: FUTURE PROJECTIONS & FIRE SIMULATOR
+       ========================================================== */
+    function renderProjectionView() {
+      const startInput = document.getElementById("projStartInput");
+      if (!startInput.value) {
+        pullCurrentNetWorthToProj();
+      }
+
+      const monthlySlider = document.getElementById("projMonthlySlider");
+      if (!monthlySlider.value || monthlySlider.value == "0") {
+        syncMonthlySavingsToProj();
+      }
+
+      updateProjections();
+    }
+
+    function pullCurrentNetWorthToProj() {
+      let totalAssets = 0;
+      let totalDebts = 0;
+      appState.accounts.forEach(a => {
+        if (a.type === "asset") totalAssets += (Number(a.balance) || 0);
+        else totalDebts += (Number(a.balance) || 0);
+      });
+      const netWorth = Math.max(0, totalAssets - totalDebts);
+      document.getElementById("projStartInput").value = Math.round(netWorth);
+      updateProjections();
+      showToast("Net Worth synced to FIRE Engine");
+    }
+
+    function syncMonthlySavingsToProj() {
+      const key = getCurrentMonthKey();
+      const monthData = appState.months[key] || { buckets: { savings: [] } };
+      const totalSavings = (monthData.buckets.savings || []).reduce((s, i) => s + (Number(i.amount) || 0), 0);
+      
+      const slider = document.getElementById("projMonthlySlider");
+      slider.value = Math.round(totalSavings);
+      onMonthlySliderChange();
+      showToast("Monthly savings synced");
+    }
+
+    function onMonthlySliderChange() {
+      const val = parseFloat(document.getElementById("projMonthlySlider").value) || 0;
+      document.getElementById("dispProjMonthly").innerText = formatCurrency(val) + "/mo";
+      updateProjections();
+    }
+
+    function updateProjections() {
+      const startingCapital = parseFloat(document.getElementById("projStartInput").value) || 0;
+      const monthlyContribution = parseFloat(document.getElementById("projMonthlySlider").value) || 0;
+      const annualReturn = parseFloat(document.getElementById("projRateSlider").value) || 8.0;
+      const horizonYears = parseInt(document.getElementById("projYearsSlider").value) || 25;
+      const targetGoal = parseFloat(document.getElementById("projTargetGoalInput").value) || 1500000;
+      const isInflation = document.getElementById("projInflationToggle").checked;
+
+      document.getElementById("dispProjStart").innerText = formatCurrency(startingCapital);
+      document.getElementById("dispProjMonthly").innerText = formatCurrency(monthlyContribution) + "/mo";
+      document.getElementById("dispProjRate").innerText = annualReturn.toFixed(1) + "%";
+      document.getElementById("dispProjYears").innerText = horizonYears + " Years";
+      document.getElementById("summaryHorizonYears").innerText = horizonYears;
+      document.getElementById("dispProjTargetGoal").innerText = formatCurrency(targetGoal);
+
+      const effectiveAnnualRate = isInflation ? Math.max(0.1, annualReturn - 2.5) : annualReturn;
+      const monthlyRate = (effectiveAnnualRate / 100) / 12;
+
+      let balance = startingCapital;
+      let totalDeposits = startingCapital;
+
+      const labels = [];
+      const balanceData = [];
+      const depositsData = [];
+
+      const currentYear = appState.currentYear;
+      const milestoneTargets = [100000, 250000, 500000, 1000000, 2000000, targetGoal];
+      const uniqueMilestones = Array.from(new Set(milestoneTargets)).sort((a,b) => a - b);
+      const milestoneReachedYears = {};
+
+      for (let y = 0; y <= horizonYears; y++) {
+        labels.push(`${currentYear + y}`);
+        balanceData.push(Math.round(balance));
+        depositsData.push(Math.round(totalDeposits));
+
+        for (let m = 0; m < 12; m++) {
+          balance = (balance + monthlyContribution) * (1 + monthlyRate);
+          totalDeposits += monthlyContribution;
+
+          uniqueMilestones.forEach(target => {
+            if (!milestoneReachedYears[target] && balance >= target) {
+              milestoneReachedYears[target] = (currentYear + y) + ` (Yr ${y})`;
+            }
+          });
+        }
+      }
+
+      const finalWealth = balanceData[balanceData.length - 1];
+      const finalDeposits = depositsData[depositsData.length - 1];
+      const totalInterest = Math.max(0, finalWealth - finalDeposits);
+      const interestRatio = finalWealth > 0 ? ((totalInterest / finalWealth) * 100).toFixed(0) : 0;
+
+      document.getElementById("projFinalNetWorth").innerText = formatCurrency(finalWealth);
+      document.getElementById("projInterestEarnedShare").innerText = `${formatCurrency(totalInterest)} (${interestRatio}% of total)`;
+
+      // Render Badges
+      const milestonesEl = document.getElementById("milestonesContainer");
+      milestonesEl.innerHTML = "";
+      uniqueMilestones.forEach(target => {
+        const reached = milestoneReachedYears[target];
+        const isTarget = target === targetGoal;
+        const badge = document.createElement("div");
+        badge.className = `p-2.5 rounded-xl border text-center transition ${reached ? 'bg-forest-900/90 border-emerald-500/50 text-mint-100 shadow-md shadow-forest-950/60' : 'bg-obsidian-900/40 border-white/5 text-mint-400/40'}`;
+        
+        let label = target >= 1000000 ? '$' + (target/1000000).toFixed(1) + 'M' : '$' + (target/1000) + 'k';
+        if (isTarget) label += " (FIRE)";
+
+        badge.innerHTML = `
+          <div class="text-xs font-mono font-bold ${reached ? 'text-gold-300' : 'text-mint-400/50'}">${label}</div>
+          <div class="text-[10px] mt-0.5 tracking-tight">${reached ? reached : 'Beyond Horizon'}</div>
+        `;
+        milestonesEl.appendChild(badge);
+      });
+
+      // Chart.js Compound Curve
+      const ctxLong = document.getElementById("longTermChart").getContext("2d");
+      if (longTermChartInstance) longTermChartInstance.destroy();
+
+      const wealthGrad = ctxLong.createLinearGradient(0, 0, 0, 240);
+      wealthGrad.addColorStop(0, "rgba(230, 197, 104, 0.45)");
+      wealthGrad.addColorStop(1, "rgba(35, 94, 29, 0.05)");
+
+      longTermChartInstance = new Chart(ctxLong, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Compound Portfolio Balance",
+              data: balanceData,
+              borderColor: "#e6c568",
+              backgroundColor: wealthGrad,
+              fill: true,
+              borderWidth: 2.5,
+              tension: 0.35,
+              pointRadius: 2
+            },
+            {
+              label: "Total Principal Invested",
+              data: depositsData,
+              borderColor: "#41a038",
+              backgroundColor: "transparent",
+              borderDash: [5, 5],
+              borderWidth: 1.8,
+              tension: 0.1,
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "top", labels: { color: "#edf9eb", font: { size: 11, family: "Plus Jakarta Sans" } } },
+            tooltip: { callbacks: { label: (c) => ` ${c.dataset.label}: ${formatCurrency(c.raw)}` } }
+          },
+          scales: {
+            x: { grid: { color: "rgba(255,255,255,0.05)" }, ticks: { color: "#bfeac8", maxTicksLimit: 8 } },
+            y: {
+              grid: { color: "rgba(255,255,255,0.05)" },
+              ticks: { color: "#bfeac8", callback: (val) => "$" + (val >= 1000000 ? (val/1000000).toFixed(1) + "M" : val >= 1000 ? (val/1000).toFixed(0) + "k" : val) }
+            }
+          }
+        }
+      });
+    }
+
+
+    /* ==========================================================
+       DATA EXPORT & RESTORE CONTROLS
+       ========================================================== */
+    function exportDataJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+      const downloadAnchor = document.createElement("a");
+      const dateStr = new Date().toISOString().split("T")[0];
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `MeMoni-backup-${dateStr}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast("MeMoni backup exported!");
+    }
+
+    function importDataJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (parsed && parsed.accounts && parsed.months) {
+            appState = parsed;
+            appState.appName = "MeMoni";
+            saveState();
+            renderAllViews();
+            showToast("MeMoni backup restored!");
+          } else {
+            showToast("Invalid MeMoni backup format.");
+          }
+        } catch (err) {
+          console.error("Import error", err);
+          showToast("Failed to parse file.");
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = "";
+    }
+
+    function resetToDemoData() {
+      appState = JSON.parse(JSON.stringify(defaultInitialState));
+      saveState();
+      renderAllViews();
+      showToast("Reset to MeMoni demo portfolio!");
+    }
+
+
+    /* ==========================================================
+       DISPATCHERS & HELPERS
+       ========================================================== */
+    function renderAllViews() {
+      renderBudgetView();
+      renderNetWorthView();
+      if (activeTab === "annual") renderAnnualCharts();
+      if (activeTab === "projection") renderProjectionView();
+    }
+
+    function formatCurrency(val) {
+      const num = Number(val) || 0;
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(num);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      initApp();
+    });
+  </script>
+</body>
+</html>
