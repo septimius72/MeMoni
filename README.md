@@ -1,4 +1,4 @@
-# MeMoney 🏛️
+# MeMoni 🏛️
 
 > **Plan your money, see your future, check in monthly.**  
 > A private, client-side personal finance architect and FIRE simulator with zero bank logins.
@@ -11,9 +11,9 @@
 
 ## Overview
 
-**MeMoney** is an upscale, privacy-first web application designed for intentional cash-flow allocation, real-time balance tracking, and long-term financial independence forecasting. 
+**MeMoni** is an upscale, privacy-first web application designed for intentional cash-flow allocation, real-time balance tracking, and long-term financial independence forecasting. 
 
-Unlike conventional budgeting apps that mandate third-party bank credential syncing (e.g., Plaid, MX), MeMoney returns full control and privacy to the user. All financial computation and storage occur directly inside the client browser.
+Unlike conventional budgeting apps that mandate third-party bank credential syncing (e.g., Plaid, MX), MeMoni returns full control and privacy to the user. All financial computation and storage occur directly inside the client browser.
 
 ---
 
@@ -51,7 +51,7 @@ Unlike conventional budgeting apps that mandate third-party bank credential sync
 - **Automatic Milestone Badges**: Calculates the exact calendar year when crossing critical thresholds ($100k, $250k, $500k, $1M, $2M, and Custom FIRE target).
 
 ### 6. Full Data Portability & Privacy
-- **Instant JSON Export**: One-click manual backup saved directly to disk (`MeMoney-backup-[YYYY-MM-DD].json`).
+- **Instant JSON Export**: One-click manual backup saved directly to disk (`MeMoni-backup-[YYYY-MM-DD].json`).
 - **One-Click Restore**: Load previous backups onto any device or browser with zero account registration.
 - **Auto-Persistence**: Real-time synchronization to browser `localStorage`.
 
@@ -59,7 +59,7 @@ Unlike conventional budgeting apps that mandate third-party bank credential sync
 
 ## 🎨 Design System & Aesthetic
 
-MeMoney is styled with a bespoke **Dark Luxury** palette:
+MeMoni is styled with a bespoke **Dark Luxury** palette:
 
 | Color Role | Hex Code | Purpose |
 | :--- | :--- | :--- |
@@ -75,15 +75,15 @@ Typography is typeset in **Outfit** (display headings) and **Plus Jakarta Sans**
 ## 🚀 Quick Start
 
 ### Option A: Open Directly in Any Browser
-Because MeMoney is built as a self-contained single-page application, no build tools, Node runtime, or package managers are required.
+Because MeMoni is built as a self-contained single-page application, no build tools, Node runtime, or package managers are required.
 
 1. Clone or download this repository:
    ```bash
-   git clone https://github.com/your-username/memoney.git
+   git clone https://github.com/your-username/MeMoni.git
    ```
 2. Navigate to the project directory:
    ```bash
-   cd memoney
+   cd MeMoni
    ```
 3. Open `index.html` in your preferred modern web browser (Chrome, Safari, Firefox, Edge).
 
@@ -91,7 +91,7 @@ Because MeMoney is built as a self-contained single-page application, no build t
 1. Push this repository to GitHub.
 2. Navigate to **Settings** > **Pages**.
 3. Under **Build and deployment**, select `main` (or `master`) branch as the source and `/root` as the folder.
-4. Click **Save**. Your MeMoney instance will be live on your custom `github.io` domain.
+4. Click **Save**. Your MeMoni instance will be live on your custom `github.io` domain.
 
 ---
 
